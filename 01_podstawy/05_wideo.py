@@ -11,7 +11,7 @@ while cap.isOpened():
 
     if ret == True:
         #WRITER 20 FPS
-        time.sleep(1/25)
+        time.sleep(1/20)
         cv2.imshow('frame', frame)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):

@@ -20,6 +20,6 @@ while True:
         break
 
 cap.release()
-writer.relase()
+writer.release()
 cv2.destroyAllWindows()
 
