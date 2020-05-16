@@ -10,29 +10,29 @@ print(f'width {width} height: {height}, FPS = {FPS}')
 
 ## callback function
 def draw_rectangle(event, x, y, flags, param):
-    global pt1, pt2, topLeft_clicked, botRight_clicked
-
+    global pt1, pt2, clicked, up
     if event == cv2.EVENT_LBUTTONDOWN:
+        clicked = True
+        pt1=(x,y)
+    elif event == cv2.EVENT_LBUTTONUP:
+        up=True
+    elif event == cv2.EVENT_MOUSEMOVE and clicked:
+        pt2 = (x, y)
+    elif clicked and up:
+        clicked = False
+        up = False
 
-        if topLeft_clicked and botRight_clicked:
-            pt1 = (0, 0)
-            pt2 = (0, 0)
-            topLeft_clicked = False
-            botRight_clicked = False
 
-        if topLeft_clicked == False:
-            pt1 = (x, y)
-            topLeft_clicked = True
-        elif botRight_clicked == False:
-            pt2 = (x, y)
-            botRight_clicked = True
+
 
 ## global variables
 pt1 = (0, 0)
 pt2 = (0, 0)
 
-topLeft_clicked = False
-botRight_clicked = False
+clicked = False
+up = False
+
+
 ## connect to callbacks
 
 cv2.namedWindow('Test')
@@ -41,11 +41,14 @@ while True:
 
     ret, frame = cap.read()
     ##draving on frame
-    if topLeft_clicked == True:
-        cv2.circle(frame,center=pt1, radius=5,color=(0,0,255), thickness=-1)
-    if topLeft_clicked and botRight_clicked:
+    if clicked:
         cv2.rectangle(frame, pt1, pt2, (0,0,255),3)
 
+
+    if up:
+        img = frame[pt1[1]: pt2[1], pt1[0]:pt2[0], :]
+        if img.shape[0] >0 and img.shape[1] >0:
+            cv2.imshow('wycinek', img)
     cv2.imshow('Test', frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
