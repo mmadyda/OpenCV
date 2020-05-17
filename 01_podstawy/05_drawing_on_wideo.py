@@ -40,7 +40,7 @@ cv2.namedWindow('Test')
 cv2.setMouseCallback('Test',draw_rectangle)
 while True:
     ret, frame = cap.read()
-    frame = cv2.resize(frame, (int(frame.shape[1]*2), int(frame.shape[0]*2)))
+    #frame = cv2.resize(frame, (int(frame.shape[1]*2), int(frame.shape[0]*2)))
     ##draving on frame
     if clicked:
         cv2.rectangle(frame, pt1, pt2, (0,0,255),3)
