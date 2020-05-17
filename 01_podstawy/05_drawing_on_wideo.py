@@ -8,6 +8,7 @@ width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 FPS = int(cap.get(cv2.CAP_PROP_FPS))
 
+
 print(f'width {width} height: {height}, FPS = {FPS}')
 
 ## callback function
