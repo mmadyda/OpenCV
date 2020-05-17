@@ -1,4 +1,6 @@
 import cv2
+import imutils
+import numpy as np
 
 cap = cv2.VideoCapture(0)
 
@@ -23,8 +25,9 @@ def draw_rectangle(event, x, y, flags, param):
         pt2 = (x, y)
 
 
-metody_porownania = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF',  'cv2.TM_SQDIFF_NORMED']
+metody_porownania = [cv2.TM_CCOEFF, cv2.TM_CCOEFF_NORMED, cv2.TM_CCORR, cv2.TM_CCORR_NORMED, cv2.TM_SQDIFF,  cv2.TM_SQDIFF_NORMED]
 
+method = metody_porownania[1]
 ## global variables
 pt1 = (0, 0)
 pt2 = (0, 0)
@@ -55,21 +58,29 @@ while True:
 
 
     if wycinek is not None:
-        porownanie = cv2.matchTemplate(frame, wycinek, cv2.TM_CCOEFF_NORMED)
+
+        #Obracanie
+        # for i in range(0,361,90):
+        #     rotated_wycinek = imutils.rotate_bound(wycinek, i)
+        #
+        #     cv2.imshow(f'rotated_{i}', rotated_wycinek)
+        # koniec obracania
+        porownanie = cv2.matchTemplate(frame, wycinek, method)
         cv2.imshow('mapa porownania', porownanie)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(porownanie)
         height, width, channels = wycinek.shape
 
-        # if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
-        #     top_left = min_loc
-        # else:
-        #     top_left = max_loc
+        if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+            top_left = min_loc
+        else:
+            top_left = max_loc
 
         top_left = max_loc
         bottom_right = (top_left[0]+width, top_left[1]+height)
         if max_val > 0.6:
             cv2.rectangle(frame, top_left, bottom_right, (0, 255, 0), 7)
-        print(f'min_val: {min_val}, max_val: {max_val}, min_loc: {min_loc}, max_loc: {max_loc}')
+        # print(f'min_val: {min_val}, max_val: {max_val}, min_loc: {min_loc}, max_loc: {max_loc} Top left: {top_left}')
+        print(f'min_val: {min_val}, max_val: {max_val}, min_loc: {min_loc}')
 
     cv2.imshow('Test', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
