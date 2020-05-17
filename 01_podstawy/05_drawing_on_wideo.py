@@ -2,12 +2,16 @@ import cv2
 import imutils
 import numpy as np
 
+
+
 cap = cv2.VideoCapture(0)
 
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 FPS = int(cap.get(cv2.CAP_PROP_FPS))
 
+orb = cv2.ORB_create()
+bf = cv2.BFMatcher(cv2.NORM_TYPE_MASK, crossCheck=True)
 
 print(f'width {width} height: {height}, FPS = {FPS}')
 
@@ -78,8 +82,19 @@ while True:
 
         top_left = max_loc
         bottom_right = (top_left[0]+width, top_left[1]+height)
+        ##ORB matching
+        kp1, des1 = orb.detectAndCompute(wycinek, None)
+        kp2, des2 = orb.detectAndCompute(frame, None)
+        matches = bf.match(des1, des2)
+        matches = sorted(matches, key=lambda x: x.imgIdx)
+        porownanie = cv2.drawMatches(wycinek, kp1, frame, kp2, matches[:200], None, flags=2)
+        print(f'polaczenia {len(matches)}')
+        if len(matches) > 5:
+            cv2.imshow('porownanie', porownanie)
+        ## end orb marching
         if max_val > 0.6:
             cv2.rectangle(frame, top_left, bottom_right, (0, 255, 0), 7)
+
         # print(f'min_val: {min_val}, max_val: {max_val}, min_loc: {min_loc}, max_loc: {max_loc} Top left: {top_left}')
         print(f'min_val: {min_val}, max_val: {max_val}, min_loc: {min_loc}')
 
