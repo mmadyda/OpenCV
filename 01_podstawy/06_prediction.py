@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 
 cap = cv2.VideoCapture(0)
-model = tf.keras.models.load_model('technitools.h5')
+model = tf.keras.models.load_model('techni.h5')
 
 
 while True:
